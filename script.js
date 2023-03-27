@@ -2,6 +2,15 @@
 // grabbing the canvas element in the index
 const canvas = document.getElementById('canvas1');
 
+// sets the initial animation to idle
+let playerState = 'idle';
+
+// pulling the player state from the html
+let dropdown = document.getElementById('animations')
+dropdown.addEventListener('change', function(e){
+    playerState = e.target.value;
+})
+
 // context variable. 2d is for the 2d drawing methods and now stored in ctx
 const ctx = canvas.getContext('2d');
 
@@ -16,19 +25,11 @@ const CANVAS_HEIGHT = canvas.height = 600;
 const spriteWidth = 575;
 const spriteHeight = 523;
 
-// used to select the specific animations you want to use
-let playerState = 'run'
-
-// setting frame variables to be used to animate the image later
-// let frameX = 0;
-// let frameY = 0;
-// commenting them out since I've built the animation array that has the exact coordinates to work with.
-
 // used to control the speed of the animations
 let gameFrame = 0;
-const staggerFrames = 5;
+const staggerFrames = 10;
 
-// setting up the array that will house the various animation cycles
+// setting up the array that will contain the various animation cycles' positions within the animation sheet
 const spriteAnimations = [];
 
 // the array map that defines each animation type
@@ -94,8 +95,6 @@ animationStates.forEach((state, index) => {
       }
 })
 
-console.log(spriteAnimations)
-
 // built in image class constructor
 const playerImage = new Image();
 // setting the image source 
@@ -108,6 +107,8 @@ function animate() {
 
     // this adjusts the position by 6 so that the animation loops over the 6 frames. 
     let position = Math.floor(gameFrame /staggerFrames % spriteAnimations[playerState].loc.length)
+
+    // defining the position of the animation frame within the sheet
     let frameX = spriteWidth * position;
     let frameY = spriteAnimations[playerState].loc[position].y;
     
@@ -115,28 +116,7 @@ function animate() {
     // The fourth and fifth arguments are what dimensions you want to pull from the image file.
     // Using 9 args, they are (sourceImage, sourceX, sourceY, sourceWidth, sourceHeight, destinationX, destinationY, destinationWidth, destinationHeight)
     // You will need to know the dimensions of your animation frames within the source image to properly use it. 
-    // Using x * spriteWidth allows you to cycle through the animation frames
-    // Using x * spriteHeight allows you to cycle through which animation you want to play 
     ctx.drawImage(playerImage, frameX , frameY, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-
-    // testing the canvas. fillRect draws a rectangle starting at 50, 50, and with a width and height of 100.
-    // ctx.fillRect(x, 50, 100, 100);
-    // getting the square to bounce back and forth
-    // if(x==CANVAS_WIDTH-100){
-    //     y=x;
-    //     x=499;
-    // }
-    // if(x==0){
-    //     y=x;
-    // }
-    // if (x>=y){
-    //     y=x;
-    //     x++;
-    // }
-    // if (x<y){
-    //     y=x;
-    //     x--;
-    // }
 
     // only advancing the frame by the amount of staggerFrames. This is still at the mercy of the CPU.
     if (gameFrame % staggerFrames == 0){
@@ -153,6 +133,5 @@ function animate() {
 
 };
 
-
-// because the different animation cycles have a different number of sprites, you can either standardize them across the board (which can possibly increase file sizes), you can write specific functions for each action, you can include arguments to specify what you want to do (further, you can build obects that contain the frame positions of the desired animation within the sheet)
+// runs the animation function
 animate();
