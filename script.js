@@ -99,7 +99,7 @@ console.log(spriteAnimations)
 // built in image class constructor
 const playerImage = new Image();
 // setting the image source 
-playerImage.src = '../assets/sprite/shadow_dog.png';
+playerImage.src = './assets/sprite/shadow_dog.png';
 
 function animate() {
 
